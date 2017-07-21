@@ -104,9 +104,25 @@ class Lean_Canvas():
         months=["Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"]
         mes=months[int(Date[3:5])-1]        
         self.c.drawString(350,670,"Guadalajara, Jalisco a "+dia+" de "+ mes+" del "+Date[6:10])
-       
+    def Compromiso(self,*args):
+        Name=args[0]
+        ID=args[1]
+        self.c.drawString(53,640,"Yo")
+        self.c.setFont("Times-BoldItalic", 12)
+        x=72
+        self.c.drawString(x,640,Name[0])
+        x+=(len(Name[0])*5.5)
+        self.c.setFont("Times-Roman",12)
+        self.c.drawString(x,640," estudiante de ITE con matricula")
+        x+=159
+        self.c.setFont("Times-BoldItalic", 12)
+        self.c.drawString(x,640,ID[0])
+        #self.c.setFont("Times-Roman",12)
+        #self.c.drawString(120,640," hago constar que estaré")
+        self.c.drawString(53,625,"estaré trabajando en Laboratorio de electrónica junto con mi equipo, conformado por:")
+        
 Data = {"Aula": "EIA204", "expedicion" : "03/07/2017","vencimiento":" - 10/07/2017", "entrada" : "16:00 hrs","salida" : "23:00 hrs" }
-Students=["Name1","Name2","Name3","Name4",""]
+Students=["Julio Cesar Almada","Name2","Name3","Name4",""]
 ID=["A01225057","A01234567","A01255757","A02340123",""]
 Material=[[1,2,3,4,5,6,7,8,9],["osciloscopio","fuente","multimetro","","","","","",""]]
 
@@ -125,6 +141,7 @@ pdf.Next_page()
 pdf.Set_Header(2)
 pdf.Load_logo()
 pdf.Date_Place(Data)
+pdf.Compromiso(Students,ID)
 pdf.END_Document()
 
 pdf.Open_File()
