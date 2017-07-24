@@ -57,13 +57,14 @@ class Lean_Canvas():
         import os
         val=os.path.dirname(os.path.realpath(__file__))+"\simple.pdf"
         os.startfile(val) 
-    def Load_Table(self):
-        self.c.drawImage("tablauno.jpg",80,420,width=6*inch, height=1*inch)
+    def Load_Table(self,offset):
+        self.c.drawImage("tablauno.jpg",80,420+offset,width=6*inch, height=1*inch)
     def Names(self,*args):
+        self.c.setFont("Times-Bold",12)
         name=args[0]
         ID=args[1]
         i=0
-        y=465
+        y=465+args[2]
         while(name[i] is not ""):
             self.c.drawString(82,y,name[i])
             self.c.drawString(412,y,ID[i])
@@ -76,11 +77,12 @@ class Lean_Canvas():
         self.c.drawImage("material.jpg",80,230,width=6*inch, height=2.1*inch)
                          
     def Material_List(self,*args):
+        self.c.setFont("Times-Bold",12)
         Material=args[0]
         Cantidad=Material[0]
         Tipo=Material[1]
         i=0
-        y=355
+        y=355+args[1]
         while(Tipo[i] is not ""):
             self.c.drawString(108,y,str(Cantidad[i]))
             self.c.drawString(150,y,Tipo[i])
@@ -100,10 +102,8 @@ class Lean_Canvas():
     def Date_Place(self,*args):
         self.c.setFont("Times-Roman",12)
         Date=args[0]["expedicion"]
-        dia=str(int(Date[0:2]))
-        months=["Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"]
-        mes=months[int(Date[3:5])-1]        
-        self.c.drawString(350,670,"Guadalajara, Jalisco a "+dia+" de "+ mes+" del "+Date[6:10])
+        self.c.drawString(350,670,"Guadalajara, Jalisco a "+self.number_to_month(Date))
+        
     def Compromiso(self,*args):
         Name=args[0]
         ID=args[1]
@@ -117,31 +117,78 @@ class Lean_Canvas():
         x+=159
         self.c.setFont("Times-BoldItalic", 12)
         self.c.drawString(x,640,ID[0])
-        #self.c.setFont("Times-Roman",12)
-        #self.c.drawString(120,640," hago constar que estaré")
+        x+=57
+        self.c.setFont("Times-Roman",12)
+        self.c.drawString(x,640," hago constar que estaré")
         self.c.drawString(53,625,"estaré trabajando en Laboratorio de electrónica junto con mi equipo, conformado por:")
+    def Horario_escrito(self,*args):
+        Entrada=args[0]["entrada"]
+        Salida=args[0]["salida"]
+        Horario=args[0]["entrada"]+" a "+args[0]["salida"]
+        Expedicion=self.number_to_month(args[0]["expedicion"])+" a "
+        Vencimiento=self.number_to_month(args[0]["vencimiento"][3:])
+        self.c.drawString(53,515,"El horario en el que estaremos trabajando es de "+Horario+" del día "+Expedicion)
+        self.c.drawString(53,500,Vencimiento+" La razón por la que necesitamos trabajar en este horario es porque es la hora en la que")
+        self.c.drawString(53,485,"terminamos clases realizaremos un proyecto de la materia "+args[0]["Materia"])
+        self.c.drawString(53,470,"Para ello necesitamos el siguiente material: ")
+    def number_to_month(self,date):
+        dia=str(int(date[0:2]))
+        months=["Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"]
+        mes=months[int(date[3:5])-1]
+        final=dia+" de "+ mes+" del "+date[6:10]
+        return final
+    def Material_table (self):
+        self.c.drawImage("tablados.jpg",80,370,width=6*inch, height=1.1*inch)
+    def Rules(self):
+        self.c.drawString(53,350,"Me comprometo a cumplir con el reglamento del laboratorio y hacer que mis compañeros de equipo ")
+        self.c.drawString(53,335,"también lo cumplan. De esta manera nos hacemos responsables por el daño que sufran el equipo y las")
+        self.c.drawString(53,320,"instalaciones tras nuestra estadía en el laboratorio. Aceptando trabajar bajo las siguientes condiciones:")
+        self.c.drawString(103,290,"1. Cumplir con el reglamento general para laboratorios.")
+        self.c.drawString(103,275,"2. Cuidar el inmueble durante su estancia en el laboratorio.")
+        self.c.drawString(103,260,"3. Reportar al laboratorista cualquier comportamiento inapropiado o circunstancia extraña ")
+        self.c.drawString(103,245,"que suceda y note durante el tiempo que esté trabajando en el laboratorio.")
+        self.c.drawString(103,230,"4. No se podrá trabajar en el laboratorio si hay clases programadas. Por lo que no se")
+        self.c.drawString(103,215,"aceptarán memorándums con horarios que se empalmen con las clases.")
+        self.c.drawString(103,200,"5. Una vez terminado su trabajo se deberá recoger su lugar de trabajo y dejar el equipo")
+        self.c.drawString(103,185,"prestado en la mesa de materiales.")
+        self.c.drawString(103,170,"6. El alumno deberá avisar a algún guardia que pase cerrar el laboratorio en caso de terminar")
+        self.c.drawString(103,155,"antes de la hora indicada.")
+        self.c.drawString(103,140,"7. Cualquier circunstancia fuera del reglamento estará a consideración de la coordinación de")
+        self.c.drawString(103,125,"laboratorios para definir la sanción correspondiente.")
+    def signatures(self,*args):
+        self.c.line(100,80,250,80)
+        self.c.line(300,80,480,80)
+        self.c.drawString(100,60,args[0][0])
+        self.c.drawString(330,60,"Ing. Alejandro Gallegos")
         
-Data = {"Aula": "EIA204", "expedicion" : "03/07/2017","vencimiento":" - 10/07/2017", "entrada" : "16:00 hrs","salida" : "23:00 hrs" }
-Students=["Julio Cesar Almada","Name2","Name3","Name4",""]
+Data = {"Aula": "EIA204", "expedicion" : "03/07/2017","vencimiento":" - 10/07/2017", "entrada" : "16:00 hrs","salida" : "23:00 hrs","Materia":"Electronica Aplicada"}
+Students=["Pedro Calderon de La barca","Name2","Name3","Name4",""]
 ID=["A01225057","A01234567","A01255757","A02340123",""]
 Material=[[1,2,3,4,5,6,7,8,9],["osciloscopio","fuente","multimetro","","","","","",""]]
 
 pdf=Lean_Canvas()
 pdf.Set_Header(1)
 pdf.Load_logo()
-pdf.Load_Table()
+pdf.Load_Table(0)
 pdf.Material_Table()
 pdf.First_Params(Data)
-pdf.Names(Students,ID)
-pdf.Material_List(Material)
+pdf.Names(Students,ID,0)
+pdf.Material_List(Material,0)
 pdf.Before_Material()
 pdf.Last_paragraph()
 
 pdf.Next_page()
 pdf.Set_Header(2)
 pdf.Load_logo()
+pdf.Load_Table(115)
+pdf.Material_table()
+pdf.Material_List(Material,70)
+pdf.signatures(Students)
+pdf.Names(Students,ID,115)
 pdf.Date_Place(Data)
 pdf.Compromiso(Students,ID)
+pdf.Horario_escrito(Data)
+pdf.Rules()
 pdf.END_Document()
 
 pdf.Open_File()
